@@ -41,7 +41,7 @@ data:
     port 6379
     rename-command FLUSHDB ""
     rename-command FLUSHALL ""
-    bind 0.0.0.0
+    bind :: 0.0.0.0
     maxmemory 0
     maxmemory-policy volatile-lru
     min-replicas-max-lag 5
@@ -620,7 +620,7 @@ data:
       timeout check 2s
 
     listen health_check_http_url
-      bind :8888  
+      bind [::]:8888  v4v6
       mode http
       monitor-uri /healthz
       option      dontlognull
@@ -667,7 +667,7 @@ data:
     # decide redis backend to use
     #master
     frontend ft_redis_master
-      bind :6379 
+      bind [::]:6379 v4v6
       use_backend bk_redis_master
     # Check all redis servers to see if they think they are master
     backend bk_redis_master
@@ -688,7 +688,7 @@ data:
       server R2 argocd-redis-ha-announce-2:6379 check inter 3s fall 1 rise 1
     frontend stats
       mode http
-      bind :9101 
+      bind [::]:9101 v4v6
       http-request use-service prometheus-exporter if { path /metrics }
       stats enable
       stats uri /stats
@@ -1061,7 +1061,7 @@ spec:
         prometheus.io/port: "9101"
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
-        checksum/config: 492a6adabb741e0cee39be9aa5155c41a4456629f862d0006a2d892dbecfbcae
+        checksum/config: 1f8ecfed1cd5a7e93711c84c39339a62573399e7ec0718c0493912cbb9d38eb3
     spec:
       # Needed when using unmodified rbac-setup.yml
       
@@ -1183,7 +1183,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/init-config: 69130412bda04eacad3530cb7bcf26cf121401e725e15d0959dd71a7380afe75
+        checksum/init-config: 8424bdb3919ab3edd90d38dc7bdd64257f70cb091ebe0ebb443d15ae234290ca
       labels:
         release: argocd
         app: redis-ha
